@@ -21,7 +21,7 @@
         $user = $result->fetch_assoc();
     }
 ?>
-<?php require_once 'ti.php' ?>
+<?php require_once 'base_templates/ti.php' ?>
 <!DOCTYPE html>
 <html>
 
@@ -39,10 +39,12 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="style.css" rel="stylesheet">
-
 </head>
 
 <body>
+    <?php startblock('content') ?>
+    <?php endblock() ?>
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
     </script>
@@ -65,36 +67,61 @@
         </li>
         <?php
 		if (isset($user_id)) {
-            echo "<li><a class='subheader'>Logged as " . $user["username"] . "</a></li>";
-			echo "<li><a href='logout.php'>Logout</a></li>";
-		}
-		else {
-			echo "<li><a href='signup.php'>Signup</a></li>";
-			echo "<li><a href='login.php'>Login</a></li>";
-		}
+        ?>
+        <li>
+            <a class="subheader">Logged as <?php echo $user["username"] ?></a>
+        </li>
+        <li <?php if ($file == "saved_weather") echo "class='active'";?>>
+            <a href='saved_weather.php'>Saved weather</a>
+        </li>
+        <li <?php if ($file == "saved_pollution") echo "class='active'";?>>
+            <a href='saved_pollution.php'>Saved pollution</a>
+        </li>
+        <li>
+            <a href='logout.php'>Logout<i class='material-icons right'>chevron_right</i></a>
+        </li>
+        <?php
+        }
+        else {
+        ?>
+        <li>
+            <a href='signup.php'>Signup</a>
+        </li>
+        <li>
+            <a href='login.php'>Login</a>
+        </li>
+        <?php
+        }
         ?>
         <li>
             <div class="divider"></div>
         </li>
-        <li>
+        <li <?php if ($file == "index") echo "class='active'";?>>
             <a href="index.php">Main</a>
         </li>
-        <li>
-            <a href="">Weather</a>
+        <li <?php if ($file == "weather") echo "class='active'";?>>
+            <a href="weather.php">Weather</a>
         </li>
-        <li>
-            <a href="">Pollution</a>
+        <li <?php if ($file == "pollution") echo "class='active'";?>>
+            <a href="pollution.php">Pollution</a>
         </li>
     </ul>
     <main>
         <div class="container">
+            <?php startblock('content') ?>
+            <?php endblock() ?>
         </div>
     </main>
 
     <script type="text/javascript">
     $('.dropdown-trigger').dropdown();
+
     $(document).ready(function() {
         $('.sidenav').sidenav();
+    });
+
+    $(document).ready(function() {
+        $('.collapsible').collapsible();
     });
     </script>
     <?php startblock('script') ?>
@@ -102,9 +129,3 @@
 </body>
 
 </html>
-
-<?php 
-if (isset($user_id)) {
-    $conn->close();
-}
-?>
