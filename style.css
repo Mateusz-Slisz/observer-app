@@ -1,3 +1,49 @@
+html,
 body {
-  background-color: blue-grey lighten-1;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: #fafafa;
+}
+
+.brand-logo {
+  padding-left: 20px !important;
+}
+
+.content-full-wo-nav {
+  /* Firefox */
+  height: -moz-calc(100% - 56px);
+  /* WebKit */
+  height: -webkit-calc(100% - 56px);
+  /* Opera */
+  height: -o-calc(100% - 56px);
+  /* Standard */
+  height: calc(100% - 56px);
+  margin-bottom: 0px !important;
+}
+
+.height-full {
+  height: 100%;
+}
+
+header,
+main,
+footer {
+  padding-left: 300px;
+}
+
+@media only screen and (max-width: 992px) {
+  header,
+  main,
+  footer {
+    padding-left: 0;
+  }
+}
+
+#sidenav-logo {
+  height: 100px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
