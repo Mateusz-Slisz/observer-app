@@ -1,4 +1,4 @@
-<?php include 'form-base.php' ?>
+<?php include 'base_templates/form-base.php' ?>
 
 <?php startblock('title') ?>
 Signup
