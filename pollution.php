@@ -1,27 +1,12 @@
-<?php 
-    require 'vendor/autoload.php';
+<?php
     $file = "pollution";
+    require 'vendor/autoload.php';
     include 'base_templates/base.php';
+    include 'helpers.php';
+    use GuzzleHttp\Client;
 
-    function air_condition_status($value) {
-        if ($value < 51) {
-            echo "<p class='green-text'>Good</p>";
-        }
-        elseif ($value < 101) {
-            echo "<p class='yellow-text'>Moderate</p>";
-        }
-        elseif ($value < 151) {
-            echo "<p class='orange-text'>Unhealthy</p>";
-        }
-        elseif ($value < 201) {
-            echo "<p class='red-text'>Unhealthy+</p>";
-        }
-        elseif ($value < 301) {
-            echo "<p class='purple-text'>Very unhealthy</p>";
-        }
-        else {
-            echo "<p class='red accent-4-text'>Hazzardous</p>";
-        }
+    if (!isset($user_id)) {
+        header("Location: login.php");
     }
 ?>
 
@@ -43,7 +28,6 @@ Pollution
     </form>
 
     <?php
-    use GuzzleHttp\Client;
     $city = @$_GET["city"] ?: NULL;
     $api_key = "c68b28f7053af4bce8a47c9c0443e9c268d4aabf";
 
@@ -66,23 +50,47 @@ Pollution
         <div class="col s8 offset-s2">
             <div class="card horizontal">
                 <div class="card-image red lighten-4">
-                    <img src="https://image.flaticon.com/sprites/new_packs/1793199-pollution.png">
+                    <img src="https://img.icons8.com/color/420/windy-weather.png">
                 </div>
                 <div class="card-stacked">
                     <div class="card-content">
                         <span class="card-title center" style="font-size: 20px !important;">
                             <?php
                                 $info = explode(",", $pollution->data->city->name);
-                                foreach ($info as &$value) {
-                                    echo $value . "<br>";
-                                }
+                                echo $info[0];
                             ?>
                         </span>
+                        <p>Address: <?php foreach (array_slice($info, 1) as &$value) echo $value;?></p>
                         <p>Air condition: <?php echo $pollution->data->aqi; ?></p>
-                        <?php air_condition_status($pollution->data->aqi); ?>
+                        <p>Status: <?php air_condition_status($pollution->data->aqi); ?></p>
                     </div>
                     <div class="card-action center">
-                        <a href="#">Save this pollution!</a>
+                        <?php
+                            $select_sql = "
+                            SELECT * FROM observed_pollutions
+                            WHERE keyword='$city' AND user_id='$user_id'
+                            ";
+                            $result = $conn->query($select_sql);
+
+                            if ($result && $result->num_rows == 1){
+                        ?>
+                        <form method="POST" action="actions/delete_pollution.php" id="deletePollution"
+                            onClick="document.getElementById('deletePollution').submit();">
+                            <input type="hidden" name="pollution_id" value="<?php echo $result->fetch_assoc()['id'];?>">
+                            <a href="#" class="red-text">Don't observe this!</a>
+                        </form>
+                        <?php
+                            }
+                            else {
+                        ?>
+                        <form method="POST" action="actions/add_pollution.php" id="addPollution"
+                            onClick="document.getElementById('addPollution').submit();">
+                            <input type="hidden" name="keyword" value="<?php echo $city ?>">
+                            <a href="#" class="green-text">Observe this!</a>
+                        </form>
+                        <?php 
+                            }
+                        ?>
                     </div>
                 </div>
             </div>

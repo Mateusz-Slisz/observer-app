@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Czas generowania: 01 Cze 2019, 01:49
+-- Czas generowania: 03 Cze 2019, 13:49
 -- Wersja serwera: 10.1.40-MariaDB
 -- Wersja PHP: 7.3.5
 
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `observed_pollutions` (
   `id` int(11) NOT NULL,
-  `link` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `keyword` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -42,7 +42,7 @@ CREATE TABLE `observed_pollutions` (
 
 CREATE TABLE `observed_weather` (
   `id` int(11) NOT NULL,
-  `link` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `keyword` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -55,8 +55,18 @@ CREATE TABLE `observed_weather` (
 CREATE TABLE `permissions` (
   `id` int(11) NOT NULL,
   `name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL
+  `description` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `observe_limit` smallint(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Zrzut danych tabeli `permissions`
+--
+
+INSERT INTO `permissions` (`id`, `name`, `description`, `observe_limit`) VALUES
+(1, 'Silver', NULL, 3),
+(2, 'Gold', NULL, 6),
+(3, 'Diamond', NULL, 12);
 
 -- --------------------------------------------------------
 
@@ -73,6 +83,13 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
+-- Zrzut danych tabeli `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `created_at`, `permission_id`) VALUES
+(1, 'matt', '$2y$10$JUEb0jni0l/KTuBcWSBsFOE2veXuV/GJjLgwZhgtHU0vrqbNtElfG', '2019-06-02 03:07:37', 1);
+
+--
 -- Indeksy dla zrzutów tabel
 --
 
@@ -81,14 +98,14 @@ CREATE TABLE `users` (
 --
 ALTER TABLE `observed_pollutions`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_index` (`user_id`,`link`);
+  ADD UNIQUE KEY `unique_index` (`user_id`,`keyword`);
 
 --
 -- Indeksy dla tabeli `observed_weather`
 --
 ALTER TABLE `observed_weather`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_index` (`link`,`user_id`),
+  ADD UNIQUE KEY `unique_index` (`keyword`,`user_id`),
   ADD KEY `fk_user_weather` (`user_id`) USING BTREE;
 
 --
@@ -125,13 +142,13 @@ ALTER TABLE `observed_weather`
 -- AUTO_INCREMENT dla tabeli `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT dla tabeli `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Ograniczenia dla zrzutów tabel
