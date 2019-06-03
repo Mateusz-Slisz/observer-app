@@ -1,7 +1,8 @@
 <?php 
-    require 'vendor/autoload.php';
     $file = "weather";
+    require 'vendor/autoload.php';
     include 'base_templates/base.php';
+    use GuzzleHttp\Client;
 ?>
 
 <?php startblock('title') ?>
@@ -21,7 +22,6 @@ Weather
     </form>
 
     <?php
-    use GuzzleHttp\Client;
     $city = @$_GET["city"] ?: NULL;
     $api_key = "4ed97abf7202e9d6277f6e18fc6d48f6";
 
@@ -58,7 +58,7 @@ Weather
                         <p>Wind speed: <?php echo $weather->wind->speed; ?>mps</p>
                     </div>
                     <div class="card-action center">
-                        <a href="#">Save this weather!</a>
+                        <a href="#" class="green-text">Observe this!</a>
                     </div>
                 </div>
             </div>
