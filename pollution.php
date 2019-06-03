@@ -29,7 +29,6 @@ Pollution
 
     <?php
     $city = @$_GET["city"] ?: NULL;
-    $api_key = "c68b28f7053af4bce8a47c9c0443e9c268d4aabf";
 
     if (isset($city)) {
         $client = new Client([
@@ -38,7 +37,7 @@ Pollution
         ]);
 
         $response = $client->request('GET', $city . '/', [
-            'query' => ['token' => $api_key], 'http_errors' => false
+            'query' => ['token' => $pollution_api_key], 'http_errors' => false
         ]);
 
         if ($response->getStatusCode() == 200) {
@@ -82,6 +81,25 @@ Pollution
                         <?php
                             }
                             else {
+                                $result = $conn->query("
+                                SELECT COUNT(*) as total FROM observed_pollutions
+                                WHERE user_id='$user_id'
+                                ");
+                                $count_pollution = $result->fetch_assoc()['total'];
+                                
+                                $result = $conn->query("
+                                SELECT observe_limit FROM permissions
+                                WHERE id=" . $user['permission_id']
+                                );
+
+                                $observe_limit = $result->fetch_assoc()['observe_limit'];
+                                if ($count_pollution == $observe_limit){
+
+                        ?>
+                        <a>You raised the limit!</a>
+                        <?php
+                                }
+                                else {
                         ?>
                         <form method="POST" action="actions/add_pollution.php" id="addPollution"
                             onClick="document.getElementById('addPollution').submit();">
@@ -89,6 +107,7 @@ Pollution
                             <a href="#" class="green-text">Observe this!</a>
                         </form>
                         <?php 
+                                }
                             }
                         ?>
                     </div>

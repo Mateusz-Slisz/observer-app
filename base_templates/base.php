@@ -3,6 +3,8 @@
     $user = NULL;
 	session_start();
     $user_id = @$_SESSION["user_id"] ?: NULL;
+    $weather_api_key = @$_SESSION["weather_api_key"] ?: NULL;
+    $pollution_api_key = @$_SESSION["pollution_api_key"] ?: NULL;
     
     if (isset($user_id)) {
         $servername = "localhost";

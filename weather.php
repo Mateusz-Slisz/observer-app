@@ -27,8 +27,7 @@ Weather
 
     <?php
     $city = @$_GET["city"] ?: NULL;
-    $api_key = "4ed97abf7202e9d6277f6e18fc6d48f6";
-
+    
     if (isset($city)) {
         $client = new Client([
             'base_uri' => 'https://api.openweathermap.org/data/2.5/weather',
@@ -36,7 +35,7 @@ Weather
         ]);
 
         $response = $client->request('GET', '', [
-            'query' => ['q' => $city, 'appid' => $api_key, 'units' => 'metric'],
+            'query' => ['q' => $city, 'appid' => $weather_api_key, 'units' => 'metric'],
             'http_errors' => false
         ]);
 
@@ -79,6 +78,25 @@ Weather
                         <?php
                             }
                             else {
+                                $result = $conn->query("
+                                SELECT COUNT(*) as total FROM observed_weather
+                                WHERE user_id='$user_id'
+                                ");
+                                $count_weather = $result->fetch_assoc()['total'];
+                                
+                                $result = $conn->query("
+                                SELECT observe_limit FROM permissions
+                                WHERE id=" . $user['permission_id']
+                                );
+
+                                $observe_limit = $result->fetch_assoc()['observe_limit'];
+                                if ($count_weather == $observe_limit){
+
+                        ?>
+                        <a>You raised the limit!</a>
+                        <?php
+                                }
+                                else {
                         ?>
                         <form method="POST" action="actions/add_weather.php" id="addWeather"
                             onClick="document.getElementById('addWeather').submit();">
@@ -86,6 +104,7 @@ Weather
                             <a href="#" class="green-text">Observe this!</a>
                         </form>
                         <?php 
+                               }
                             }
                         ?>
                     </div>
