@@ -1,5 +1,5 @@
 <?php 
-    $file = "saved_pollution";
+    $file = "observed_pollution";
     require 'vendor/autoload.php';
     include 'base_templates/base.php';
     include 'helpers.php';

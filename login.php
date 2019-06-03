@@ -42,10 +42,6 @@ Login
 <?php
     $username = @$_POST["username"] ?: NULL;
     $password = @$_POST["password"] ?: NULL;
-    $servername = "localhost";
-    $username_db = "root";
-    $password_db = "";
-    $dbname = "observer";
     
     if (isset($username, $password)) {
         $conn = new mysqli($servername, $username_db, $password_db, $dbname);
@@ -66,8 +62,8 @@ Login
                 session_start();
 
                 $_SESSION["user_id"] = $user["id"];
-                $_SESSION["weather_api_key"] = "4ed97abf7202e9d6277f6e18fc6d48f6";
-                $_SESSION["pollution_api_key"] = "c68b28f7053af4bce8a47c9c0443e9c268d4aabf";
+                $_SESSION["weather_api_key"] = $weather_api_key;
+                $_SESSION["pollution_api_key"] = $pollution_api_key;
                 header("Location:index.php");
             }
             else {

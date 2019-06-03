@@ -1,5 +1,5 @@
 <?php 
-    $file = "saved_weather";
+    $file = "observed_weather";
     require 'vendor/autoload.php';
     include 'base_templates/base.php';
     use GuzzleHttp\Client;

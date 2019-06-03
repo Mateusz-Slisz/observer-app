@@ -1,4 +1,9 @@
-<?php require_once 'base_templates/ti.php' ?>
+<?php
+    require_once 'base_templates/ti.php';
+    include('config/db.php');
+    include('config/api.php');
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -33,9 +38,3 @@
 </body>
 
 </html>
-
-<?php 
-if (isset($user_id)) {
-    $conn->close();
-}
-?>

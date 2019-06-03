@@ -61,10 +61,6 @@ $(document).ready(function() {
     $username = @$_POST["username"] ?: NULL;
     $password = @$_POST["password"] ?: NULL;
     $permission = @$_POST["permission"] ?: NULL;
-    $servername = "localhost";
-    $username_db = "root";
-    $password_db = "";
-    $dbname = "observer";
     
     if (isset($username, $password, $permission)) {
         $conn = new mysqli($servername, $username_db, $password_db, $dbname);
@@ -74,7 +70,9 @@ $(document).ready(function() {
         }
 
         $select_sql = "
-        SELECT username FROM users WHERE username='$username'
+        SELECT username
+        FROM users
+        WHERE username='$username'
         ";
         $result = $conn->query($select_sql);
         

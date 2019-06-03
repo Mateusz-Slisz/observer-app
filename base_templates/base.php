@@ -1,16 +1,13 @@
 <?php
     require_once 'base_templates/ti.php';
+    include('config/db.php');
+    session_start();
     $user = NULL;
-	session_start();
     $user_id = @$_SESSION["user_id"] ?: NULL;
     $weather_api_key = @$_SESSION["weather_api_key"] ?: NULL;
     $pollution_api_key = @$_SESSION["pollution_api_key"] ?: NULL;
     
     if (isset($user_id)) {
-        $servername = "localhost";
-        $username_db = "root";
-        $password_db = "";
-        $dbname = "observer";
         $conn = new mysqli($servername, $username_db, $password_db, $dbname);
 
         if ($conn->connect_error) {
@@ -70,11 +67,14 @@
         <li>
             <a class="subheader">Logged as <?php echo $user["username"] ?></a>
         </li>
-        <li <?php if ($file == "saved_weather") echo "class='active'";?>>
-            <a href='saved_weather.php'>Saved weather</a>
+        <li <?php if ($file == "profile") echo "class='active'";?>>
+            <a href='profile.php'>My profile</a>
         </li>
-        <li <?php if ($file == "saved_pollution") echo "class='active'";?>>
-            <a href='saved_pollution.php'>Saved pollution</a>
+        <li <?php if ($file == "observed_weather") echo "class='active'";?>>
+            <a href='observed_weather.php'>Observed weather</a>
+        </li>
+        <li <?php if ($file == "observed_pollution") echo "class='active'";?>>
+            <a href='observed_pollution.php'>Observed pollution</a>
         </li>
         <li>
             <a href='actions/logout.php'>Logout<i class='material-icons right'>chevron_right</i></a>
@@ -121,6 +121,10 @@
 
     $(document).ready(function() {
         $('.collapsible').collapsible();
+    });
+
+    $(document).ready(function() {
+        $('.tabs').tabs();
     });
     </script>
 
