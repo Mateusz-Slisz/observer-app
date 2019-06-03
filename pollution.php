@@ -4,6 +4,10 @@
     include 'base_templates/base.php';
     include 'helpers.php';
     use GuzzleHttp\Client;
+
+    if (!isset($user_id)) {
+        header("Location: login.php");
+    }
 ?>
 
 
@@ -61,7 +65,32 @@ Pollution
                         <p>Status: <?php air_condition_status($pollution->data->aqi); ?></p>
                     </div>
                     <div class="card-action center">
-                        <a href="#" class="green-text">Observe this!</a>
+                        <?php
+                            $select_sql = "
+                            SELECT * FROM observed_pollutions
+                            WHERE keyword='$city' AND user_id='$user_id'
+                            ";
+                            $result = $conn->query($select_sql);
+
+                            if ($result && $result->num_rows == 1){
+                        ?>
+                        <form method="POST" action="actions/delete_pollution.php" id="deletePollution"
+                            onClick="document.getElementById('deletePollution').submit();">
+                            <input type="hidden" name="pollution_id" value="<?php echo $result->fetch_assoc()['id'];?>">
+                            <a href="#" class="red-text">Don't observe this!</a>
+                        </form>
+                        <?php
+                            }
+                            else {
+                        ?>
+                        <form method="POST" action="actions/add_pollution.php" id="addPollution"
+                            onClick="document.getElementById('addPollution').submit();">
+                            <input type="hidden" name="keyword" value="<?php echo $city ?>">
+                            <a href="#" class="green-text">Observe this!</a>
+                        </form>
+                        <?php 
+                            }
+                        ?>
                     </div>
                 </div>
             </div>

@@ -3,6 +3,10 @@
     require 'vendor/autoload.php';
     include 'base_templates/base.php';
     use GuzzleHttp\Client;
+
+    if (!isset($user_id)) {
+        header("Location: login.php");
+    }
 ?>
 
 <?php startblock('title') ?>
@@ -58,7 +62,32 @@ Weather
                         <p>Wind speed: <?php echo $weather->wind->speed; ?>mps</p>
                     </div>
                     <div class="card-action center">
-                        <a href="#" class="green-text">Observe this!</a>
+                        <?php
+                            $select_sql = "
+                            SELECT * FROM observed_weather
+                            WHERE keyword='$city' AND user_id='$user_id'
+                            ";
+                            $result = $conn->query($select_sql);
+
+                            if ($result && $result->num_rows == 1){
+                        ?>
+                        <form method="POST" action="actions/delete_weather.php" id="deleteWeather"
+                            onClick="document.getElementById('deleteWeather').submit();">
+                            <input type="hidden" name="weather_id" value="<?php echo $result->fetch_assoc()['id'];?>">
+                            <a href="#" class="red-text">Don't observe this!</a>
+                        </form>
+                        <?php
+                            }
+                            else {
+                        ?>
+                        <form method="POST" action="actions/add_weather.php" id="addWeather"
+                            onClick="document.getElementById('addWeather').submit();">
+                            <input type="hidden" name="keyword" value="<?php echo $city ?>">
+                            <a href="#" class="green-text">Observe this!</a>
+                        </form>
+                        <?php 
+                            }
+                        ?>
                     </div>
                 </div>
             </div>
@@ -73,4 +102,9 @@ Weather
     }
     ?>
 </div>
+<?php 
+if (isset($user_id)) {
+    $conn->close();
+}
+?>
 <?php endblock() ?>

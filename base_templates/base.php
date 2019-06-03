@@ -1,4 +1,5 @@
 <?php
+    require_once 'base_templates/ti.php';
     $user = NULL;
 	session_start();
     $user_id = @$_SESSION["user_id"] ?: NULL;
@@ -21,7 +22,6 @@
         $user = $result->fetch_assoc();
     }
 ?>
-<?php require_once 'base_templates/ti.php' ?>
 <!DOCTYPE html>
 <html>
 
@@ -42,9 +42,6 @@
 </head>
 
 <body>
-    <?php startblock('content') ?>
-    <?php endblock() ?>
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
     </script>
@@ -78,7 +75,7 @@
             <a href='saved_pollution.php'>Saved pollution</a>
         </li>
         <li>
-            <a href='logout.php'>Logout<i class='material-icons right'>chevron_right</i></a>
+            <a href='actions/logout.php'>Logout<i class='material-icons right'>chevron_right</i></a>
         </li>
         <?php
         }
@@ -124,6 +121,7 @@
         $('.collapsible').collapsible();
     });
     </script>
+
     <?php startblock('script') ?>
     <?php endblock() ?>
 </body>
