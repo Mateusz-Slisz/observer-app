@@ -1,4 +1,4 @@
-<?php include 'base_templates/form-base.php' ?>
+<?php include '../base_templates/form-base.php' ?>
 
 <?php startblock('title') ?>
 Login
@@ -64,7 +64,7 @@ Login
                 $_SESSION["user_id"] = $user["id"];
                 $_SESSION["weather_api_key"] = $weather_api_key;
                 $_SESSION["pollution_api_key"] = $pollution_api_key;
-                header("Location:index.php");
+                header("Location: ../main/index.php");
             }
             else {
                 echo "<script> M.toast({html: 'Bad credentials!'})</script>";

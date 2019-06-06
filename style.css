@@ -55,3 +55,20 @@ main .container {
 .card-title {
   color: #ef5350 !important;
 }
+
+.sidenav li.active {
+  background-color: #ee6e73;
+}
+
+.sidenav li.active > a {
+  color: white;
+}
+
+.cursive-text {
+  font-style: italic;
+}
+
+.project-description {
+  color: silver;
+  text-transform: lowercase;
+}

@@ -1,88 +1,93 @@
-<?php 
-    $file = "weather";
-    require 'vendor/autoload.php';
-    include 'base_templates/base.php';
+<?php
+    $file = "pollution";
+    require '../vendor/autoload.php';
+    include '../base_templates/base.php';
+    include '../utils/helpers.php';
     use GuzzleHttp\Client;
 
     if (!isset($user_id)) {
-        header("Location: login.php");
+        header("Location: ../user/login.php");
     }
 ?>
 
+
 <?php startblock('title') ?>
-Weather
+Pollution
 <?php endblock() ?>
 
 <?php startblock('content') ?>
 <div>
-    <form method="GET" action="weather.php">
+    <form method="GET" action="pollution.php">
         <div class="row">
             <div class="input-field col s12 m12">
                 <i class="material-icons prefix">search</i>
                 <input id="icon_prefix" type="text" class="validate" name="city" required>
-                <label for="icon_prefix">Search weather by city:</label>
+                <label for="icon_prefix">Search pollution by city:</label>
             </div>
         </div>
     </form>
 
     <?php
     $city = @$_GET["city"] ?: NULL;
-    
+    // deklaracja klientu do requestów
+
     if (isset($city)) {
         $client = new Client([
-            'base_uri' => 'https://api.openweathermap.org/data/2.5/weather',
+            'base_uri' => 'http://api.waqi.info/feed/',
             'timeout'  => 2.0,
         ]);
 
-        $response = $client->request('GET', '', [
-            'query' => ['q' => $city, 'appid' => $weather_api_key, 'units' => 'metric'],
-            'http_errors' => false
+        $response = $client->request('GET', $city . '/', [
+            'query' => ['token' => $pollution_api_key], 'http_errors' => false
         ]);
-
+        
+        // instrukcja warunkowa na 
         if ($response->getStatusCode() == 200) {
-            $weather = json_decode($response->getBody());
+            $pollution = json_decode($response->getBody());
+            if ($pollution->status == "ok") {
+
     ?>
     <div class="row">
         <div class="col s8 offset-s2">
             <div class="card horizontal">
                 <div class="card-image red lighten-4">
-                    <img src="https://image.flaticon.com/sprites/new_packs/178324-weather.png">
+                    <img src="https://img.icons8.com/color/420/windy-weather.png">
                 </div>
                 <div class="card-stacked">
                     <div class="card-content">
-                        <span class="card-title center">
-                            <?php echo $weather->name . " " . $weather->sys->country; ?>
+                        <span class="card-title center" style="font-size: 20px !important;">
+                            <?php
+                                $info = explode(",", $pollution->data->city->name);
+                                echo $info[0];
+                            ?>
                         </span>
-                        <p>Sky:
-                            <?php echo $weather->weather[0]->description; ?>, <?php echo $weather->clouds->all; ?>%
-                        </p>
-                        <p>Temperature: <?php echo $weather->main->temp; ?>&#8451;</p>
-                        <p>Pressure: <?php echo $weather->main->pressure; ?>hPa</p>
-                        <p>Wind speed: <?php echo $weather->wind->speed; ?>mps</p>
+                        <p>Address: <?php foreach (array_slice($info, 1) as &$value) echo $value;?></p>
+                        <p>Air condition: <?php echo $pollution->data->aqi; ?></p>
+                        <p>Status: <?php air_condition_status($pollution->data->aqi); ?></p>
                     </div>
                     <div class="card-action center">
                         <?php
                             $select_sql = "
-                            SELECT * FROM observed_weather
+                            SELECT * FROM observed_pollutions
                             WHERE keyword='$city' AND user_id='$user_id'
                             ";
                             $result = $conn->query($select_sql);
 
                             if ($result && $result->num_rows == 1){
                         ?>
-                        <form method="POST" action="actions/delete_weather.php" id="deleteWeather"
-                            onClick="document.getElementById('deleteWeather').submit();">
-                            <input type="hidden" name="weather_id" value="<?php echo $result->fetch_assoc()['id'];?>">
+                        <form method="POST" action="../actions/delete_pollution.php" id="deletePollution"
+                            onClick="document.getElementById('deletePollution').submit();">
+                            <input type="hidden" name="pollution_id" value="<?php echo $result->fetch_assoc()['id'];?>">
                             <a href="#" class="red-text">Don't observe this!</a>
                         </form>
                         <?php
                             }
                             else {
                                 $result = $conn->query("
-                                SELECT COUNT(*) as total FROM observed_weather
+                                SELECT COUNT(*) as total FROM observed_pollutions
                                 WHERE user_id='$user_id'
                                 ");
-                                $count_weather = $result->fetch_assoc()['total'];
+                                $count_pollution = $result->fetch_assoc()['total'];
                                 
                                 $result = $conn->query("
                                 SELECT observe_limit FROM permissions
@@ -90,7 +95,7 @@ Weather
                                 );
 
                                 $observe_limit = $result->fetch_assoc()['observe_limit'];
-                                if ($count_weather == $observe_limit){
+                                if ($count_pollution == $observe_limit){
 
                         ?>
                         <a>You raised the limit!</a>
@@ -98,13 +103,13 @@ Weather
                                 }
                                 else {
                         ?>
-                        <form method="POST" action="actions/add_weather.php" id="addWeather"
-                            onClick="document.getElementById('addWeather').submit();">
+                        <form method="POST" action="../actions/add_pollution.php" id="addPollution"
+                            onClick="document.getElementById('addPollution').submit();">
                             <input type="hidden" name="keyword" value="<?php echo $city ?>">
                             <a href="#" class="green-text">Observe this!</a>
                         </form>
                         <?php 
-                               }
+                                }
                             }
                         ?>
                     </div>
@@ -117,13 +122,14 @@ Weather
         else {
             echo "<h3 class='center'>No results found with given city.</h3>";
         }
+    }
+        else {
+            echo "<h3 class='center'>No results found with given city.</h3>";
+        }
 
     }
     ?>
 </div>
-<?php 
-if (isset($user_id)) {
-    $conn->close();
-}
-?>
+
+
 <?php endblock() ?>

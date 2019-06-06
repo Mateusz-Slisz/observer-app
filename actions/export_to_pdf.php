@@ -10,6 +10,7 @@
         die("Connection failed: " . $conn->connect_error);
     }
 
+    // ustawienia dla gereowanego pliku pdf
     $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
     $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
@@ -102,6 +103,6 @@
         false,
         ''
     ); 
-    
+    ob_end_clean();
     $pdf->Output();
 ?>

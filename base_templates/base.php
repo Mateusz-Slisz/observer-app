@@ -1,6 +1,7 @@
+<!-- połączenie dziedziczone przez inne templatki -->
 <?php
-    require_once 'base_templates/ti.php';
-    include('config/db.php');
+    require_once 'ti.php';
+    include('../config/db.php');
     session_start();
     $user = NULL;
     $user_id = @$_SESSION["user_id"] ?: NULL;
@@ -26,6 +27,7 @@
 
 <head>
     <meta charset="utf-8">
+    <!-- blok title-->
     <title>
         <?php startblock('title') ?>
         Base template
@@ -37,7 +39,7 @@
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link href="style.css" rel="stylesheet">
+    <link href="../style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -58,9 +60,10 @@
     <ul id="slide-out" class="sidenav sidenav-fixed">
         <li id="sidenav-logo">
             <a href="#" class="subheader brand-logo center">
-                <img src="res/earth.svg" alt="Earth planet" height="100px">
+                <img src="../res/earth.svg" alt="Earth planet" height="100px">
             </a>
         </li>
+        <!-- akcje zalogowanego uzytkownika-->
         <?php
 		if (isset($user_id)) {
         ?>
@@ -68,26 +71,27 @@
             <a class="subheader">Logged as <?php echo $user["username"] ?></a>
         </li>
         <li <?php if ($file == "profile") echo "class='active'";?>>
-            <a href='profile.php'>My profile</a>
+            <a href='../user/profile.php'>My profile</a>
         </li>
         <li <?php if ($file == "observed_weather") echo "class='active'";?>>
-            <a href='observed_weather.php'>Observed weather</a>
+            <a href='../user/observed_weather.php'>Observed weather</a>
         </li>
         <li <?php if ($file == "observed_pollution") echo "class='active'";?>>
-            <a href='observed_pollution.php'>Observed pollution</a>
+            <a href='../user/observed_pollution.php'>Observed pollution</a>
         </li>
         <li>
-            <a href='actions/logout.php'>Logout<i class='material-icons right'>chevron_right</i></a>
+            <a href='../actions/logout.php'>Logout<i class='material-icons right'>chevron_right</i></a>
         </li>
+        <!-- akcje niezalogowanego uzytkownika-->
         <?php
         }
         else {
         ?>
         <li>
-            <a href='signup.php'>Signup</a>
+            <a href='../user/signup.php'>Signup</a>
         </li>
         <li>
-            <a href='login.php'>Login</a>
+            <a href='../user/login.php'>Login</a>
         </li>
         <?php
         }
@@ -96,22 +100,24 @@
             <div class="divider"></div>
         </li>
         <li <?php if ($file == "index") echo "class='active'";?>>
-            <a href="index.php">Main</a>
+            <a href="../main/index.php">Main</a>
         </li>
         <li <?php if ($file == "weather") echo "class='active'";?>>
-            <a href="weather.php">Weather</a>
+            <a href="../main/weather.php">Weather</a>
         </li>
         <li <?php if ($file == "pollution") echo "class='active'";?>>
-            <a href="pollution.php">Pollution</a>
+            <a href="../main/pollution.php">Pollution</a>
         </li>
     </ul>
     <main>
         <div class="container">
+            <!-- glowny blok -->
             <?php startblock('content') ?>
             <?php endblock() ?>
         </div>
     </main>
 
+    <!-- skrypty jquery aktywujace komponenty materialize css -->
     <script type="text/javascript">
     $('.dropdown-trigger').dropdown();
 
@@ -128,6 +134,7 @@
     });
     </script>
 
+    <!-- blok dodatkowych skryptów -->
     <?php startblock('script') ?>
     <?php endblock() ?>
 </body>

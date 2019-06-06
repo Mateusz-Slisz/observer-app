@@ -1,8 +1,8 @@
 <?php 
     $file = "observed_pollution";
-    require 'vendor/autoload.php';
-    include 'base_templates/base.php';
-    include 'helpers.php';
+    require '../vendor/autoload.php';
+    include '../base_templates/base.php';
+    include '../utils/helpers.php';
     use GuzzleHttp\Client;
 ?>
 
@@ -56,7 +56,7 @@ Saved pollution
                     <p>Status: <?php air_condition_status($pollution->data->aqi); ?></p>
                 </div>
                 <div class="card-action center">
-                    <form method="POST" action="actions/delete_pollution.php" id="<?php echo $form_name; ?>"
+                    <form method="POST" action="../actions/delete_pollution.php" id="<?php echo $form_name; ?>"
                         onClick="document.getElementById('<?php echo $form_name; ?>').submit();">
                         <input type="hidden" name="pollution_id" value="<?php echo $row['id'];?>">
                         <a href="#" class="red-text">Don't observe this!</a>

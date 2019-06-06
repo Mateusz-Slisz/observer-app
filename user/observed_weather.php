@@ -1,7 +1,7 @@
 <?php 
     $file = "observed_weather";
-    require 'vendor/autoload.php';
-    include 'base_templates/base.php';
+    require '../vendor/autoload.php';
+    include '../base_templates/base.php';
     use GuzzleHttp\Client;
 ?>
 
@@ -55,7 +55,7 @@ Saved weather
                     <p>Wind speed: <?php echo $weather->wind->speed; ?>mps</p>
                 </div>
                 <div class="card-action center">
-                    <form method="POST" action="actions/delete_weather.php" id="<?php echo $form_name;?>"
+                    <form method="POST" action="../actions/delete_weather.php" id="<?php echo $form_name;?>"
                         onClick="document.getElementById('<?php echo $form_name;?>').submit();">
                         <input type="hidden" name="weather_id" value="<?php echo $row["id"];?>">
                         <a href="#" class="red-text">Don't observe this!</a>

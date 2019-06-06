@@ -1,7 +1,7 @@
 <?php 
     $file = "profile";
-    require 'vendor/autoload.php';
-    include 'base_templates/base.php';
+    require '../vendor/autoload.php';
+    include '../base_templates/base.php';
 ?>
 
 <?php startblock('title') ?>
@@ -109,12 +109,12 @@ My profile
     </div>
     <div id="export" class="col s12">
         <div style="margin-top: 20px;">
-            <a href="actions/export_to_csv.php">
+            <a href="../actions/export_to_csv.php">
                 <button class="btn waves-effect waves-light blue right">Export to CSV
                     <i class="material-icons right">file_download</i>
                 </button>
             </a>
-            <a href="actions/export_to_pdf.php">
+            <a href="../actions/export_to_pdf.php">
                 <button class="btn waves-effect waves-light right" style="margin-right: 10px;">Export to PDF
                     <i class="material-icons right">file_download</i>
                 </button>
